@@ -1,0 +1,1 @@
+INSERT INTO users (username, password, email, name, surname, phone, city, country) VALUES ('admin', '$2a$12$KVZfJwCW9anKsHkQp6zc2.2dhajWfvdvOQewyzB9691HNZxtHjBH2', 'admin@example.com', 'admin', 'admin', '123456789', 'Madrid', 'Spain');
