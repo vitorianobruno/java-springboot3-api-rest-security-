@@ -7,7 +7,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -19,7 +20,8 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(UserController.class)
+@SpringBootTest
+@AutoConfigureMockMvc
 class UserControllerIntegrationTest {
 
     @Autowired
@@ -81,14 +83,14 @@ class UserControllerIntegrationTest {
     }
 
     @Test
-    @DisplayName("PATCH /users/{id} - Partial update")
+    @DisplayName("PATCH /users/{id} - Partial update name")
     void patchUser_ShouldUpdateUserPartially() throws Exception {
-        User existing = new User(1L, "John", "Doe", "johndoe", "pass", "john@example.com", "12345", "NY", "USA");
-        User update = new User(null, "Johnny", null, null, null, null, null, null, null);
-        User updated = new User(1L, "Johnny", "Doe", "johndoe", "pass", "john@example.com", "12345", "NY", "USA");
+        User existing = new User(1L, "johndoe", "pass",  "John", "Doe", "john@example.com", "12345", "NY", "USA");
+        User update   = new User(null, null, null, "Johnny", null, null, null, null, null);
+        User patched  = new User(1L, "johndoe", "pass", "Johnny", "Doe", "john@example.com", "12345", "NY", "USA");
 
         when(userService.findById(1L)).thenReturn(existing);
-        when(userService.save(any(User.class))).thenReturn(updated);
+        when(userService.save(any(User.class))).thenReturn(patched);
 
         mockMvc.perform(patch("/users/1")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -126,5 +128,3 @@ class UserControllerIntegrationTest {
                 .andExpect(status().isNoContent());
     }
 }
-
-
